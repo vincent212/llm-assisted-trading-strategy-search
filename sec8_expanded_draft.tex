@@ -1,0 +1,138 @@
+% ==========================================================================
+% Expanded Section 8 — experiment-INDEPENDENT pieces (draft, to merge into
+% latss_arxiv.tex during the full rewrite). These need no experimental results.
+% 8.4/8.5 (jump-gap E12b, withhold E12a) are added when those runs land.
+% ==========================================================================
+
+\subsection{Search and abduction, formalized}
+\label{sec:formal}
+
+Fix an evaluator $E$ and a hypothesis space $H$ of candidate strategies. A \emph{searcher} is a
+procedure that returns $\hat h \in \arg\max_{h \in H} E(h)$---it explores $H$ and reports the
+best element it finds. This is what LATSS, FunSearch, and every LLM factor-miner do: $H$ is the
+set of programs expressible over a supplied vocabulary, $E$ is the (cross-validated, skill-barred)
+score, and the LLM supplies the variation operator that proposes new $h \in H$.
+
+\emph{Abduction} is the distinct act of producing an $h \notin H$: extending the space itself when
+no element of $H$ explains the phenomenon. The two are not points on a difficulty continuum---they
+are different operations. Search presupposes that the space worth searching has already been
+delimited; abduction is what supplies that delimitation.
+
+Make the LLM's reach precise. Let $D$ be the model's training distribution and $\mathcal{C}(D)$ the
+\emph{reachable set}: everything obtainable by recombining, interpolating, and re-expressing the
+content of $D$. An LLM used as a proposal operator draws from (a learned approximation of)
+$\mathcal{C}(D)$. Two consequences follow directly.
+
+\begin{quote}
+\textbf{Observation 1 (search stays in the closure).} If $H \subseteq \mathcal{C}(D)$, then every
+candidate the LLM proposes lies in $\mathcal{C}(D)$, and so does the champion. Novelty
+\emph{within} $\mathcal{C}(D)$---an expression no human has written---is routine; it is still
+interpolation inside the closure.
+
+\textbf{Observation 2 (lifting the search does not escape the closure).} Replacing ``propose a
+formula in vocabulary $V$'' with ``propose a new variable/mechanism/dataset'' enlarges $H$ from
+formulas to ideas, but the proposals are still drawn from $\mathcal{C}(D)$---each is a
+recombination of hypotheses already present in $D$. The abductive target is precisely an $h \notin
+\mathcal{C}(D)$: a hypothesis no source in $D$ contains. Lifting the search one level changes $H$;
+it does not change that the operator samples $\mathcal{C}(D)$.
+\end{quote}
+
+This is the structural content of Zahavy's \emph{LLMs Can't Jump}~\cite{zahavy}: strong induction
+(patterns from $D$) and deduction (consequences of premises in $D$), but no demonstrated mechanism
+for producing a premise outside $\mathcal{C}(D)$. It also connects to the extrapolation
+result of Balestriero, Pesenti and LeCun~\cite{lecun}: in high dimension, learned models operate by
+interpolation, and $\mathcal{C}(D)$ is exactly the interpolative hull. A new alpha mechanism is a
+jump \emph{out} of that hull.
+
+\subsection{A rubric for novelty (and how the claim is falsified)}
+\label{sec:rubric}
+
+``Novelty'' conflates four achievements that are not equivalent. Table~\ref{tab:rubric} separates
+them, states what evidence would demonstrate each, and records the current state. The
+distinctions are what let a reader hold a specific claim to a specific bar of evidence.
+
+\begin{table}[htbp]
+\centering
+\caption{A rubric for novelty in automated alpha discovery. ``$\notin \mathcal{C}(D)$'' marks the
+level that requires a hypothesis outside the model's reachable set.}
+\label{tab:rubric}
+\small
+\begin{tabular}{@{}p{2.4cm} p{4.0cm} p{4.0cm} p{2.6cm}@{}}
+\toprule
+level & definition & evidence that would demonstrate it & state \\
+\midrule
+Syntactic & a formula/program no one has written & any run emitting a novel expression & routine \\[2pt]
+Solution & a previously unknown construction for a \emph{defined} problem & FunSearch: new cap-set constructions, better bounds~\cite{funsearch} & demonstrated \\[2pt]
+Hypothesis / mechanism ($\notin \mathcal{C}(D)$) & a new explanation for an unexplained phenomenon, not present in $D$ & a system originating a driver no source in $D$ contains, with a positive control showing the jump is achievable & not demonstrated \\[2pt]
+Economic discovery ($\notin \mathcal{C}(D)$) & a new, durable, uncrowded source of returns & out-of-space edge that survives forward, out of sample, after costs and crowding & no convincing demonstration \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Falsification.} The claim of this section is that current LLM-driven systems operate at
+levels 1--2 and have not been shown to reach 3--4. It is falsifiable, not rhetorical: it is refuted
+by a system that, given raw data and \emph{no} supplied vocabulary, repeatedly originates durable,
+economically intelligible sources of return that no source in its training data specified---with a
+human or oracle positive control establishing that the jump was achievable on the same task. We are
+aware of no such demonstration. Blind reviewers rating LLM research ideas as \emph{more} novel than
+their own~\cite{si2024} measures how novel an idea \emph{looks} (a level-1/3 confusion), not whether
+it is real (level 4); that gap is where alpha lives.
+
+\subsection{Two ceilings, only one of which scaffolding can lift}
+\label{sec:two-ceilings}
+
+Alpha resists automated discovery for two \emph{independent} reasons, routinely conflated.
+
+\emph{The cognitive ceiling} is the inability to produce $h \notin \mathcal{C}(D)$ (Section~\ref{sec:formal}).
+It is intrinsic to the model. LeCun's ``no world model'' critique~\cite{lecun,lecunmtr} is a
+\emph{separate} limitation that scaffolding \emph{can} lift: LATSS supplies a grounded world model
+externally---the features are measurements of the world and the backtest is the reality check---which
+is why the instrument of Sections~\ref{sec:framework}--\ref{sec:results} works at all. But supplying a
+world model does not supply the jump. Grounding tells the model whether a hypothesis \emph{it already
+holds} survives contact with data; it does not generate a hypothesis outside $\mathcal{C}(D)$.
+
+\emph{The market-structure ceiling} is that alpha is adversarial and perishable, and its evaluator is
+causally ambiguous: a successful backtest does not say \emph{why} a factor predicted---mechanism,
+correlation, hidden risk exposure, regime artifact, leakage, cost illusion, or an edge that
+evaporates once capital finds it. Mathematics gives FunSearch a clean verifier; finance does not. So
+even novelty at level 3 is \emph{necessary but not sufficient} for level 4: a genuinely new mechanism
+can still fail to be durable, uncrowded alpha. The null-max bar of Section~\ref{sec:bar} addresses
+overfitting within the search; it says nothing about the missing hypothesis or about perishability.
+
+\subsection{Where current systems sit}
+\label{sec:audit}
+
+Table~\ref{tab:audit} classifies representative LLM alpha-discovery systems by the space they search
+and the highest novelty level they demonstrate. The pattern is uniform: each recombines a
+human-defined primitive vocabulary---a factor-operator language over raw price/volume, or a set of
+indicators---and none is shown to originate an economic primitive no one specified. Machinery
+(multi-agent hierarchies, tree search, execution sandboxes, novelty regularizers) enlarges or
+disciplines the search; it does not change which set is being searched. AlphaAgent's penalty on
+abstract-syntax-tree similarity to crowded factors~\cite{alphaagent} is itself evidence that, left
+unregularized, LLMs regenerate known (in-$\mathcal{C}(D)$) factors.
+
+\begin{table}[htbp]
+\centering
+\caption{Representative LLM alpha systems by search space and demonstrated novelty (Table~\ref{tab:rubric}).}
+\label{tab:audit}
+\small
+\begin{tabular}{@{}p{3.4cm} p{5.2cm} p{2.2cm} p{1.6cm}@{}}
+\toprule
+system & primitive vocabulary / search space & machinery & level \\
+\midrule
+LATSS (this work) & given indicators $\to$ scoring rule & DE fit + null-max bar & 2 \\
+AlphaAgent~\cite{alphaagent} & factor formulas over raw price/volume & multi-agent + AST-novelty penalty & 2 \\
+Automate Strategy Finding~\cite{automate} & factor/strategy formulas over raw inputs & multi-agent + RL & 2 \\
+CogAlpha~\cite{cogalpha} & factor formulas over raw inputs & LLM + tree search & 2 \\
+QuantaAlpha~\cite{quantaalpha} & factor formulas over raw inputs & multi-agent & 2 \\
+AlphaLogics~\cite{alphalogics} & logic/formula factors & search + verify & 2 \\
+EFS~\cite{efs} & evolutionary factor formulas & evolutionary search & 2 \\
+FunSearch~\cite{funsearch} (math, for contrast) & programs for a \emph{defined} problem & LLM + exact evaluator & \textbf{2} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The contrast with FunSearch is the whole argument in one row: it reaches level 2 (a genuinely new
+\emph{construction}) because the problem, representation, and exact evaluator were supplied by a
+human. It did not decide a new representation was needed and invent it. In finance the evaluator is
+not even clean, so the same ceiling binds harder.

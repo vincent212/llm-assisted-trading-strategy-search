@@ -13,3 +13,23 @@ venv/
 .DS_Store
 .idea/
 .vscode/
+runs_*/
+*.pyc
+/tmp/
+
+# experiment run-output dirs (scratch)
+e1_*/
+e2_*/
+
+# latex build artifacts
+*.aux
+*.fdb_latexmk
+*.fls
+*.out
+*.synctex.gz
+latss_arxiv.log
+
+# large raw experiment caches / scratch run outputs
+results_v2/*.npy
+results_v2/e7_r*/
+results_v2/servicer.log
