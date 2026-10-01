@@ -52,8 +52,8 @@ against a skill bar, a statistical threshold for how much apparent skill the sam
 with no signal. The model does not judge its own output; the evaluator and the bar do. On a synthetic
 test-bed in which the amount of real signal is known and dialed from zero upward, the loop rejects noise
 and recovers signal above a measured threshold, provided the bar is computed by rerunning the same search
-that produced the candidate; a bar computed from a simpler search certified pure noise in 13 of 30 runs
-on independent noise realizations. For the second part we argue that the language model's role is a prior over hypotheses: it can
+that produced the candidate; a bar computed from a simpler search lets pure noise through. 
+For the second part we argue that the language model's role is a prior over hypotheses: it can
 generate many candidates and rank them by plausibility, so that only the most plausible need testing.
 Whether such a ranking is accurate enough for economic hypotheses has not been measured, and we describe
 how to measure it. The third part, invention in the strong sense, has no demonstration by any system we
@@ -107,7 +107,8 @@ contribution is the ranking, but we found no measurement of whether the ranking 
 economic hypotheses (Section~\ref{sec:abduction}).
 \item \textbf{Can an LLM invent a concept absent from its training?} This is invention in the strong
 sense, which philosophers call creative abduction. We know of no system that has been shown to do it,
-and we argue that sampling from a fixed learned distribution does not supply it
+and we argue that a language model cannot do it alone: it can only propose ideas that are
+combinations of what it learned in training, and a concept absent from its training is not among them
 (Sections~\ref{sec:ceiling} and~\ref{sec:abduction}).
 \end{enumerate}
 
@@ -119,13 +120,20 @@ real signal must clear rises with the number of candidates tested. Whether a goo
 lets weaker real signal pass is a conjecture we state but do not test. The same section states the
 limit: the prior ranks only hypotheses the model can represent.
 
-The third answer is developed in Section~\ref{sec:abduction}. In the philosophy of science discovery is
-conjecture and refutation: a guess is proposed and then kept or dropped against evidence. Alpha
-discovery is the inverse problem of inferring a model from noisy returns, which is ill-posed, and LATSS
-follows Tarantola's Bayesian-Popperian procedure for such problems: a prior proposes models and a
-falsifying test keeps the survivors. A trained transformer is a fixed, stateless inference engine. It
-can generate and rank conjectures within what it has learned; whether anything built around it can
-introduce a concept outside that is open, and we propose a benchmark that would measure it.
+The third answer is that invention is an open problem. The paper's position has three parts.
+\begin{itemize}[leftmargin=1.4em]
+\item \emph{Demonstrated: no.} We found no system shown to introduce a concept absent from its training
+(Sections~\ref{sec:litreview} and~\ref{sec:invention}).
+\item \emph{Argued: a language model cannot do it alone.} What it proposes is combinations of what it
+learned in training. This is our argument, not a proof (Section~\ref{sec:inference-loop}).
+\item \emph{Open: whether an agent built around the model could do it}, with tools for requesting new
+measurements and checks on where an idea came from. The benchmark of Section~\ref{sec:jumpbench} is the
+proposed way to measure that.
+\end{itemize}
+The argument draws on the philosophy of science, in which discovery is conjecture and refutation, and on
+Tarantola's treatment of inverse problems, in which a prior proposes models and a falsifying test keeps
+the survivors; LATSS supplies the test, and the open problem is the prior
+(Section~\ref{sec:abduction}).
 
 \paragraph{Contributions.} (i) A controlled benchmark for LLM strategy-search systems, with synthetic
 features of known signal strength and mechanical searchers that reuse the same evaluation stack. (ii)
