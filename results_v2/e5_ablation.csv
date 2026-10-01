@@ -1,0 +1,5 @@
+rho,bar,bar_q95,false_cert_rate,cert_rate,n_seeds
+0.0,correct_nonlinear,0.8445,0.0,,30
+0.0,mismatched_linear,0.4081,0.667,,30
+0.15,correct_nonlinear,0.8445,,0.433,30
+0.15,mismatched_linear,0.4081,,1.0,30

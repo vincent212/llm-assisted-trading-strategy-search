@@ -1,0 +1,10 @@
+rho,seed,cv_median_oos,per_run_bar_q95,clears_per_run_bar,clears_fixed_e3_bar,json
+0.0,0,0.5153,0.6732,False,False,e7_r00_s0/mag7_k1sp_20260930_231004.json
+0.0,1,0.2245,0.6858,False,False,e7_r00_s1/mag7_k1sp_20260930_231017.json
+0.0,2,-0.0470,0.7113,False,False,e7_r00_s2/mag7_k1sp_20260930_231027.json
+0.15,0,0.8191,0.4530,True,False,e7_r15_s0/mag7_k1sp_20260930_225638.json
+0.15,1,0.9062,0.4908,True,True,e7_r15_s1/mag7_k1sp_20260930_230125.json
+0.15,2,0.3577,0.6953,False,False,e7_r15_s2/mag7_k1sp_20260930_230046.json
+0.20,0,1.2169,0.7329,True,True,e7_r20_s0/mag7_k1sp_20260930_223910.json
+0.20,1,1.0209,0.6546,True,True,e7_r20_s1/mag7_k1sp_20260930_225516.json
+0.20,2,1.3957,0.8575,True,True,e7_r20_s2/mag7_k1sp_20260930_225513.json

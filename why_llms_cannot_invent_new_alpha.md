@@ -1,102 +1,170 @@
-# Why LLMs Cannot Invent New Alpha
+# Einstein Versus Newton: Why LLMs Cannot Invent New Alpha
 
-Large language models, and the agent frameworks built on them, can search for and validate
-trading strategies. They cannot invent genuinely new alpha. This is not an engineering gap to
-be closed with a better agent or more orchestration — it is inherent to how the models work.
+Large language models can generate trading strategies no human has written before. That is not
+in dispute, and this essay does not dispute it. The claim here is narrower and sharper, and it
+turns entirely on what *invent* means.
 
-## What these systems actually do
+By *invent new alpha* I do not mean "produce a factor formula nobody has published" — a search
+system does that easily. I mean **originate a genuinely new hypothesis about where returns
+come from: a variable, a mechanism, or a relationship that lies outside the space of
+possibilities the system was given.** Under that definition the answer is no. An LLM can
+produce novelty *within* a supplied hypothesis space; it cannot make the abductive jump that
+creates a new one. Everything below argues that distinction, and shows why alpha is the case
+where it bites hard.
 
-The current wave of "AI quant" systems all share one shape. A language model proposes and
-mutates a candidate — a strategy, or a formulaic factor — an evaluator scores it, and the best
-candidates feed back into the next prompt. This is the template DeepMind's **FunSearch**
-established: the language model is a *search operator* over a space of programs, not an
-oracle. LATSS (LLM-Assisted Trading Strategy Search) applies it to strategies built from a
-supplied set of indicators; the alpha-mining agents (AlphaAgent, Alpha-GPT, CogAlpha,
-AlphaForge, Hubble, and the rest) apply it one level down, to formulaic factors built from raw
-price and volume through a fixed operator language. They differ in scope and machinery —
-multi-agent hierarchies, tree search, sandboxes, novelty penalties — but they share the
-paradigm: **recombination of a human-defined vocabulary, followed by certification.**
+So this is not an argument that LLMs cannot produce novelty. They demonstrably can. It is an
+argument about *where the novelty comes from*.
 
-This is the same thing a coding agent does. A coding agent recombines and tests known
-constructs, under supervision, against a specification; it does not invent a new programming
-paradigm. LATSS recombines and tests known indicators, under supervision, against a backtest;
-it does not invent a new source of edge. Both are search-and-certify engines. They are
-genuinely useful, and they are bounded.
+## Search versus abduction
 
-## Two limitations — only one is an engineering problem
+There are two fundamentally different operations.
 
-Two well-known critiques of language models bear directly on this, and it matters that they
-are different.
+**Search:** Here is a space of possible solutions. Try things.
 
-**Yann LeCun: no model of the world.** LeCun argues that language models have no grounded,
-causal understanding — only next-token prediction over surface patterns ("word models, not
-world models") — so they cannot reason about the mechanism behind an effect. This limitation
-*can* be supplied externally. A framework hands the model the world it lacks: the features are
-measurements of the market, and the backtest is a reality check that scores every proposal
-against what actually happened. In that sense LATSS *is* a world model bolted onto the LLM.
-This objection is addressable by scaffolding.
+**Abduction:** Something about reality does not make sense. What new concept or hypothesis
+should exist that would make sense of it?
 
-**Tom Zahavy (DeepMind), "LLMs can't jump": no abduction.** Zahavy argues that language models
-handle induction (pattern-matching) and deduction (formal proof) but are structurally
-incapable of abduction — the creative leap that formulates a genuinely new explanatory
-hypothesis, the premises rather than the proof. His case study is Einstein's jump to
-spacetime curvature: a hypothesis that the data available at the time did not compress into.
-This limitation is **not** addressable by scaffolding. Inventing a new alpha — a predictive
-relationship that is not a recombination of the given primitives — is exactly such a jump: a
-hypothesis outside the training distribution. Giving the model a world model does not make it
-jump. Grounding is necessary; it is not abduction.
+The first is a search problem, and an LLM coupled to an evaluator may be exceptional at it. The
+second is the scientific leap. The difference is not that search is easy — searching a large
+enough space is extraordinarily hard. The difference is that search assumes the space worth
+searching has already been defined. Abduction is what happens when you do not yet know what
+space you should be searching in the first place.
 
-That is the crux. The framework can fix the missing world model. Nothing an agent does can
-manufacture the jump.
+This is Tom Zahavy's argument in *LLMs Can't Jump*: current models are strong at induction
+(extracting patterns from data) and increasingly strong at deduction (working out consequences
+of premises), but struggle with the abductive step in genuine invention — generating the new
+premise from which a new explanation follows. It is a position paper, a structural argument
+that the mechanism for the jump is missing, rather than an impossibility theorem. But it is the
+right frame, because the gap it names is exactly the one that has never been demonstrated to
+close: no LLM system has been shown to originate a hypothesis outside the space it was handed.
 
-## Why alpha is the hard case: discovery, not design
+## FunSearch does not refute this — it proves the distinction
 
-It is tempting to say inventing new alpha is like asking a model to invent a new programming
-language. The analogy is only half right, and it flatters the model. A programming language is
-a *design artifact*: it need only be internally coherent and useful, it can be assembled as a
-functional remix of known constructs, and it can be verified deterministically by running it.
-A language that compiles and runs is a success.
+The strongest apparent counterexample is FunSearch. DeepMind used a language model to generate
+programs for open mathematical problems, and the system found previously unknown constructions
+and improved known results — *Nature* reports "hitherto unknown" constructions and new bounds
+for the cap-set problem. So the lazy claim that LLMs merely regurgitate their training data is
+false. Coupled to a good evaluator, they produce genuinely new results.
 
-Alpha is not a design artifact — it is an *empirical discovery*. A new factor must be **true
-about the world**: a real, non-obvious relationship between what can be measured now and what
-returns will be later. Truth about the world cannot be recombined into existence from priors;
-it has to be discovered. And it is verified only noisily, against historical data with a low
-signal-to-noise ratio, which is why a plausible-looking factor that backtests well is usually
-just overfit noise. Worse, alpha is adversarial and perishable: it must be not only true but
-*uncrowded*, and it decays as others find it — the opposite of a language, which grows more
-valuable as it is adopted.
+But look at what FunSearch is given. The human supplies the problem. The human supplies the
+evaluation function. The human supplies the representation in which candidate solutions are
+expressed. Often the human supplies a program skeleton, leaving one component for the model to
+evolve. The system then generates on the order of a million candidate programs and keeps the
+ones that score better. That is not a criticism — it is why FunSearch works. The problem is
+already formulated, and the model's generative capacity is brought to bear on the *search*.
 
-The right reference class is therefore not "invent a new language" but "discover a new law of
-physics" or "find a drug that actually works in trials" — a true, non-obvious claim about
-reality that must survive contact with noisy data, not merely be coherent. Language models
-recombine what they have seen. A new law is a jump to something they have not.
+That is the whole point. FunSearch shows an LLM can *participate in discovery*. It does not
+show that the LLM can decide *what should be discovered*. It did not conclude that an entirely
+different mathematical representation was needed and invent it; it searched, extraordinarily
+well, inside a space a human defined. FunSearch is not evidence against the thesis. It is the
+cleanest available illustration of it.
 
-## The ceiling
+## Einstein did not search Newtonian physics harder
 
-Put together, this defines a ceiling on how far AI can be pushed in trading-strategy
-development, and it is close to where LATSS already sits. An LLM-driven framework can:
 
-- recombine a human-supplied vocabulary of features into candidate strategies,
-- fit their parameters, and
-- certify the survivors against a valid skill bar that rejects overfit noise.
+Nobody handed Einstein a defined problem to search. He did not find relativity by trying more
+variations of Newtonian physics. He did something different: he saw that the existing framework
+itself was wrong, and proposed a new premise — the equivalence principle — that changed what a
+valid explanation could even look like. That move created a new search space. Once it existed,
+much of the physics that followed was ordinary search; but someone first had to make the jump.
 
-It cannot decide *what to measure*. Choosing the raw predictive ideas — the features, the data
-sources, the economic mechanisms — is the abductive step, and it remains the human's. The
-much-discussed "novelty" in alpha-mining agents (penalizing crowded formulas, requiring an
-economic rationale) is novelty *within* the operator space; it steers recombination, it does
-not produce a jump.
+That is the operation an LLM has not been shown to perform. An LLM stands on the shoulders of
+every giant at once — it has read everything. But standing on shoulders is only how you see
+further along a view that already exists. A genuinely new hypothesis is a shoulder no one has
+built yet: there is nothing there to stand on. "New" *within* a hypothesis space is not a new
+hypothesis.
 
-None of this is a problem to be solved with a cleverer agent, more tools, or a larger context
-window. It would require a different kind of model — one capable of abduction, or one with a
-genuine world model of the sort LeCun advocates. Until such a model exists, AI's contribution
-to alpha is bounded by search and certification: recombining and rigorously testing human
-ideas. That is valuable. It is not the creative leap, and no framework will make it one.
+## Why alpha is where this bites
+
+The usual architecture of an AI alpha system is straightforward:
+
+> LLM → generate candidate → backtest → score → retain → mutate → repeat.
+
+Give it a vocabulary of indicators and it searches combinations. Give it raw price and volume
+and a fixed operator language and it searches factor formulas. Give it a large data lake and it
+searches a larger space still. [LATSS](https://vincentmayeski.substack.com/p/using-ai-in-trading-strategy-development)
+is one instance of this pattern, and it is genuinely useful.
+
+But notice everything decided before the search begins: what data is relevant, what the
+prediction target is, what horizon matters, what counts as an observation, which
+transformations are available, what a candidate factor looks like, what the evaluator is, and
+what tests define success. The machine searches inside that world. A factor-mining agent handed
+RSI, volume, volatility, and momentum with a fixed operator language can find an expression
+nobody has ever written — and that expression is still a construction from the vocabulary it
+was given. It has not discovered a new economic primitive.
+
+Now suppose the real source of an anomaly is a phenomenon nobody thought was relevant: a
+variable that is not in the factor vocabulary, not in the operator language, not in the
+database, that nobody specified should be measured. Searching the given space harder will never
+surface it, because the missing ingredient is outside the space. More compute does not solve
+this. More agents do not. More sophisticated tree search does not. A larger context window
+certainly does not. The system would have to generate a reason to look somewhere nobody told it
+to look — the jump — and that is the thing it cannot do.
+
+## But can't it just propose the hypotheses?
+
+The obvious response is to move the search up a level: instead of searching factor formulas
+inside a fixed vocabulary, have the model propose the hypotheses themselves — new variables,
+new mechanisms, new datasets. And it can. Ask an LLM for candidate sources of edge and it
+generates them fluently: filing sentiment, supplier-network effects, options positioning, and
+so on. This is genuinely useful, and probably the most promising near-term use of LLMs in
+research.
+
+But look at what those proposals are. Each is an idea the model read somewhere — a
+recombination of hypotheses people have already written down. Moving the search from formulas
+to ideas enlarges the vocabulary; it does not escape it. The proposed "new variable" is new to
+you, not new to the world. The abductive jump is a hypothesis that is not in that space at all:
+the thing no one — including everyone whose writing trained the model — has yet thought to look
+for. Generating hypotheses is still search. The jump is inventing one the space did not
+contain.
+
+## Alpha is also unusually hostile to search
+
+Mathematics gives FunSearch a clean evaluator: a construction satisfies the constraints or it
+does not; an algorithm can be benchmarked; a proof can be verified; the objective is defined in
+advance. Finance offers none of this cleanly. When an agent finds a factor that predicts
+returns, a successful backtest does not tell you what caused the relationship — genuine
+mechanism, accidental correlation, hidden exposure to a known risk, a regime artifact, data
+leakage, overfitting, a transaction-cost illusion, or an edge that vanishes once enough capital
+finds it. The evaluator never tells you what the missing hypothesis should have been; it only
+tells you whether a candidate survived. And alpha is adversarial and perishable: a mathematical
+construction does not disappear because someone else learns it, but an economic edge does.
+
+## Novelty is not discovery
+
+It helps to separate kinds of novelty, because they are not the same achievement:
+
+- **Syntactic** — a formula nobody has written. Obviously within reach.
+- **Solution** — a previously unknown construction for a defined problem. Demonstrated by FunSearch.
+- **Hypothesis / mechanism** — a new explanation for an unexplained phenomenon. Not demonstrated.
+- **Economic discovery** — a new, durable, uncrowded source of returns. No convincing demonstration.
+
+Blind expert reviewers even rate LLM research ideas as more novel than their own (Si et al.,
+2024) — but that measures how novel an idea *looks*, not whether it turns out to be real. That
+gap is where alpha lives.
+
+## The current ceiling
+
+The ceiling is not that LLMs can't search — search is their strength. It is the line between
+*searching* a hypothesis space and *creating* one, and today's alpha agents live entirely on
+the near side. Crossing it would mean a system that, given raw market data and no predefined
+vocabulary, repeatedly finds durable, economically intelligible sources of return no one told
+it to look for. None has.
+
+So the summary is not a hedge. An LLM-driven framework recombines a human-supplied vocabulary
+into strategies, fits them, and certifies the survivors — new expressions inside the space it
+was given. It does not originate the new hypothesis that would enlarge that space: the
+abductive jump, the Einstein move, which is exactly what genuinely new alpha requires. Search
+can find the needle; it cannot decide the haystack is in the wrong field.
 
 ---
 
-**References.** FunSearch (DeepMind, 2023). "LLMs can't jump," Tom Zahavy, DeepMind
-([tomzahavy.com/projects/llms-cant-jump](https://www.tomzahavy.com/projects/llms-cant-jump)).
-Yann LeCun on world models
+**References.** Romera-Paredes et al., *Mathematical discoveries from program search with large
+language models* (FunSearch), *Nature*, 2023. Tom Zahavy, *LLMs Can't Jump* (position paper),
+DeepMind, 2026 —
+[tomzahavy.com/projects/llms-cant-jump](https://www.tomzahavy.com/projects/llms-cant-jump).
+Si, Yang & Hashimoto, *Can LLMs Generate Novel Research Ideas? A Large-Scale Human Study with
+100+ NLP Researchers*, 2024 ([arXiv:2409.04109](https://arxiv.org/abs/2409.04109)). Balestriero,
+Pesenti & LeCun, *Learning in High Dimension Always Amounts to Extrapolation*, 2021
+([arXiv:2110.09485](https://arxiv.org/abs/2110.09485)). Yann LeCun on world models
 ([MIT Technology Review](https://www.technologyreview.com/2026/01/22/1131661/yann-lecuns-new-venture-ami-labs/)).
-AlphaAgent — LLM-driven alpha mining with regularized exploration against alpha decay
-([arXiv:2502.16789](https://arxiv.org/abs/2502.16789)).
