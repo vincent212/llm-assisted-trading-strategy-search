@@ -28,8 +28,11 @@ e2_*/
 *.out
 *.synctex.gz
 latss_arxiv.log
+can_llms_generate_alpha.log
 
 # large raw experiment caches / scratch run outputs
 results_v2/*.npy
 results_v2/e7_r*/
 results_v2/servicer.log
+*.toc
+results_v2/*.log
